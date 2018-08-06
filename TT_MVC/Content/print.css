@@ -1,0 +1,54 @@
+﻿.navbar{
+    display:none;
+}
+
+footer{
+    display:none;
+}
+
+a{display:none;}
+
+
+.container h2{
+    text-align:center;
+}
+
+hr{
+    display:none;
+
+}
+
+table {
+ border-collapse:collapse;
+ width:90%;
+ }
+
+th, td {
+ border:1px solid black;
+ width:20%;
+ }
+
+td {
+ text-align:center;
+ }
+
+caption {
+ font-weight:bold
+ }
+
+
+td:nth-child(n+7){
+    display:none;
+}
+
+th:nth-child(n+7){
+    display:none;
+}
+
+td:nth-child(1){
+    display:none;
+}
+
+th:nth-child(1){
+    display:none;
+}

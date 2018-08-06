@@ -1,0 +1,20 @@
+﻿
+@{
+	ViewBag.Title = "Statistique";
+}
+
+<h2>Statistique</h2>
+<hr />
+
+<p>
+	Total nombre de demande pour l'année @DateTime.Now.Year :
+
+	<div>
+		@using GridMvc.Html
+
+		@Html.Grid((List<TT_MVC.Models.StatistiqueViewModel>)ViewBag.Id).SetLanguage("fr").EmptyText("Aucune statistique").Columns(columns =>
+{
+	columns.Add(p => p.Id);
+})
+	</div>
+</p>

@@ -1,0 +1,68 @@
+﻿@model TT_MVC.Models.Model_Ticket_Attente
+
+@{
+	Layout = null;
+}
+
+<link href="~/Content/Site.css" rel="stylesheet" type="text/css" media="screen" />
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Validation du Ticket</h4>
+</div>
+
+<div class="modal-body" style="width:100%">
+	@using ( Html.BeginForm() )
+	{
+		<div class="form-horizontal">
+			<div class="form-group">
+				<div class="col-md-10">
+					@Html.TextAreaFor(model => model.Commentaire, htmlAttributes: new { rows = "10", @cols = "80", @id = "editor1" })
+					@Html.ValidationMessageFor(model => model.Commentaire, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.DateFinTicket, htmlAttributes: new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.DateFinTicket, new { htmlAttributes = new { @class = "form-control date datepicker", @id = "datepicker", @style = "width:auto", @Value= DateTime.Now.ToString("dd/MM/yyyy") } })
+					@Html.ValidationMessageFor(model => model.DateFinTicket, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			@Html.HiddenFor(model => model.Id, htmlAttributes: new { @id = "idTicketHidden" })
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit"><i class="icon icon-check icon-lg"></i> Enregistrer</button>
+			<button class="btn btn-inverse" type="submit" data-dismiss="modal"><i class="icon icon-times icon-lg"></i> Fermer</button>
+		</div>
+	}
+
+
+
+
+	<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+	<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+	<script src="~/Scripts/bootstrap-datetimepicker.fr.js"></script>
+
+	<script>
+		//Appel du texte enrichi ckeditor
+	edit = CKEDITOR.replace('editor1', {
+		language: 'fr'
+	});
+
+	//Création du datepicker boostrap
+	$(function () {
+		$('#datepicker').datetimepicker({
+			language: 'fr',
+			todayBtn: "true",
+			format: "dd/mm/yyyy",
+			autoclose: "true",
+			pickerPosition: "bottom-left",
+			minView: "month"
+		});
+	});
+
+	//Rechargement de la fenêtre parent quand la modal ce ferme. Permet de réactualiser l'id de sélection.
+	$('#myModal').on('hidden.bs.modal', function () {
+		window.location.reload(true);
+	});
+	</script>

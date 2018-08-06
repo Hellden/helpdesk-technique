@@ -1,0 +1,81 @@
+﻿
+@{
+	ViewBag.Title = "Ticket_Attente";
+}
+
+<h2>Ticket en attente</h2>
+
+@using System.Security.Claims
+@using GridMvc.Html
+
+@{
+	var userRoles = new List<Claim>();
+	string role = null;
+	if ( Request.IsAuthenticated )
+	{
+		var claimIdentity = User.Identity as ClaimsIdentity;
+		if ( claimIdentity != null )
+		{
+			userRoles = claimIdentity.FindAll(ClaimTypes.Role).ToList();
+		}
+		foreach ( var item in userRoles )
+		{
+			role = item.Value;
+		}
+	}
+}
+
+@model IEnumerable<TT_MVC.Models.Model_Ticket_Attente>
+
+@Html.Grid(Model).SetLanguage("fr").EmptyText("Aucun ticket").Columns(columns =>
+{
+columns.Add(p => p.Id).Titled("Numéro ticket").Sortable(true).SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
+
+columns.Add(p => p.DateDebut).Format("{0:dd/MM/yyyy}").Titled("Date du Ticket");
+
+columns.Add(p => p.Nom);
+
+columns.Add(p => p.Prenom).Titled("Prénom");
+
+columns.Add(p => p.Sujet).Encoded(false).Sanitized(false);
+
+columns.Add(p => p.Message).Encoded(false).Sanitized(false);
+
+columns.Add(p => p.Suivie).Encoded(false).Sanitized(false);
+
+if ( Request.IsAuthenticated && role == "Technique" || role == "Moderateur" )
+{
+	columns.Add().RenderValueAs(p => Html.ActionLink("Suivie", "Modal_Suivie", "Home", new { id = p.Id }, htmlAttributes: new { @class = "btn btn-primary", data_toggle = "modal", data_target = "#myModal" })).Encoded(false).Sanitized(false);
+
+	columns.Add().RenderValueAs(p => @<a href="@Url.Action("Modal_Validation/" + p.Id, "Home")" class="btn btn-default" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-ok"></span></a>).Encoded(false).Sanitized(false);
+	}
+}).WithPaging(20)
+
+@if ( Request.IsAuthenticated && role == "Technique" || role == "Moderateur" || role == "Impression" )
+{
+	<p><a href='#' OnClick='javascript:window.print()' class="glyphicon glyphicon-"> <img src="~/Content/Images/printer.png" style="width:40px;height:70px;" alt="Imprimer" /></a></p><br/>
+}
+
+
+@*Message de validation.*@
+
+@{
+	if ( Request.Params["confirmSuivie"] == "ok" )
+	{
+		<div class="alert alert-success">
+			<strong>Le suivi a bien été enregistré.</strong>
+		</div>
+	}
+	else if ( Request.Params["configValid"] == "ok" )
+	{
+		<div class="alert alert-success">
+			<strong>La validation a bien été enregistrée.</strong>
+		</div>
+		}
+
+}
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width:850px"></div>
+	</div>
+</div>

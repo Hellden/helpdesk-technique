@@ -1,0 +1,101 @@
+﻿@using System.Security.Claims
+
+@{
+	var userRoles = new List<Claim>();
+	string role = null;
+	if ( Request.IsAuthenticated )
+	{
+		var claimIdentity = User.Identity as ClaimsIdentity;
+		if ( claimIdentity != null )
+		{
+			userRoles = claimIdentity.FindAll(ClaimTypes.Role).ToList();
+		}
+		foreach ( var item in userRoles )
+		{
+			role = item.Value;
+		}
+	}
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - Ticket Technique</title>
+
+	<link rel="stylesheet" type="text/css" href="~/Content/print.css" media="print" />
+
+	<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="~/Content/Site.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" media="screen"/>
+
+
+	@*Appel du favicon*@
+	<link href="~/favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+	<meta name="description" content="Ticket Technique" />
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				@Html.ActionLink("Demande d'intervention Technique", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+			</div>
+
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li>@Html.ActionLink("Accueil", "Index", "Home")</li>
+					<li>@Html.ActionLink("Tickets en Attente", "Ticket_Attente", "Home")</li>
+
+					@if ( ViewBag.ticketPresent != 0 )
+					{
+						<li style="background-image:url(~/Content/Images/bulleTicket.png);color:white; margin-top:8px;">
+							<img src="~/Content/Images/bulleTicket.png" style="position:absolute;width:35px;height:45px;color:white;margin-top:-25px;margin-left:-16px;">
+							<div style="font-size:12px;margin-left:-3px;">@HttpContext.Current.Session["ticketPresent"]</div>
+						</li>
+					}
+
+					@if ( Request.IsAuthenticated && role == "Technique" || role == "Moderateur" || role == "Direction" )
+					{
+						<li>@Html.ActionLink("Historique Tickets", "Ticket_Historique", "Home")</li>
+
+						if ( Request.IsAuthenticated && role == "Moderateur" )
+						{
+							<li>@Html.ActionLink("Nouvel utilisateur", "Utilisateur", "Home")</li>
+						}
+						<li>@Html.ActionLink("Statistiques", "Statistique", "Home")</li>
+						<li>@Html.ActionLink("Se déconnecter", "Logout", "Authentication")</li>
+					}
+					<li>@Html.ActionLink("About","About","Home")</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="container body-content">
+		@RenderBody()
+		<hr />
+		<footer>
+			<p>&copy; @DateTime.Now.Year - Ticket Technique</p>
+			@if ( Request.IsAuthenticated )
+			{
+				@Html.ActionLink("Se déconnecter", "Logout", "Authentication")
+			}
+			else
+			{
+				<p>@Html.ActionLink("Connexion", "Login", "Authentication")</p>
+			}
+		</footer>
+	</div>
+
+	@Scripts.Render("~/bundles/js")
+	@RenderSection("scripts", required: false)
+</body>
+</html>

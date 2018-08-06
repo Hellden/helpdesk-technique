@@ -1,0 +1,33 @@
+﻿
+@{
+	ViewBag.Title = "Ticket_Historique";
+}
+
+<h2>Historique des tickets</h2>
+
+@using GridMvc.Html
+
+@model IEnumerable<TT_MVC.Models.Model_Ticket_Historique>
+
+@Html.Grid(Model).SetLanguage("fr").EmptyText("Aucun ticket").Columns(columns =>
+{
+	columns.Add(p => p.Id).Titled("Numéro ticket").Sortable(true).SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
+	
+	columns.Add(p => p.DateDebut).Format("{0:dd/MM/yyyy}").Titled("Date du Ticket");
+
+	columns.Add(p => p.DateFinTicket).Format("{0:dd/MM/yyyy}").Titled("Date de Clôture");
+
+	columns.Add(p => p.Nom);
+
+	columns.Add(p => p.Prenom);
+
+	columns.Add(p => p.Sujet).Encoded(false).Sanitized(false);
+
+	columns.Add(p => p.Message).Encoded(false).Sanitized(false);
+
+	columns.Add(p => p.Suivie).Encoded(false).Sanitized(false);
+
+	columns.Add(p => p.Commentaire).Encoded(false).Sanitized(false);
+
+
+}).WithPaging(20)

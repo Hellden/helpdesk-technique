@@ -1,0 +1,93 @@
+﻿@model TT_MVC.Models.Model_Ticket_Attente
+
+@{
+	ViewBag.Title = "Index";
+}
+
+@section Scripts
+{
+	<script>
+		edit = CKEDITOR.replace('editor1', {
+			language: 'fr'
+		});
+	</script>
+
+}
+
+<h2>Accueil</h2>
+<img src="~/Content/Images/Logo/logo.png" style="margin-left:100%;margin-top:-70px;"/>
+
+@using (Html.BeginForm("Index","Home",FormMethod.Post,htmlAttributes:new { defaultfocus="Nom" }))
+{
+	<div class="form-horizontal">
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<div class="form-group">
+			@Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2"})
+			<div class="col-md-3">
+				@Html.TextBoxFor(model => model.Nom, htmlAttributes: new { @class = "form-control", @style = "text-transform:uppercase", autofocus = "" } )
+				@Html.ValidationMessageFor(model => model.Nom, "", new { @class = "text-danger" })
+			</div>
+
+			@Html.LabelFor(model => model.Prenom, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-3">
+				@Html.EditorFor(model => model.Prenom, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Prenom, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Sujet, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.Sujet, new { htmlAttributes = new { @class = "form-control"} })
+				@Html.ValidationMessageFor(model => model.Sujet, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.TextAreaFor(model => model.Message, htmlAttributes:new { rows = "10", @cols = "80", @id= "editor1" })
+				@Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<button type="submit" class="btn btn-primary alert" id="valid" style="width:20%;">
+					<span class="glyphicon glyphicon-ok">
+						Envoyer
+					</span>
+				</button>
+			</div>
+		</div>
+
+		@*Récupération de la validation d'enregistrement.*@
+		@if ( Request.Params["confirm"] == "ok" )
+		{
+			<div class="alert alert-success">
+				<strong>Le message a bien été envoyé.</strong>
+			</div>
+		}
+
+	</div>
+}
+
+<br />
+<h4>Dernier Ticket Validé</h4>
+<hr />
+
+<div>
+	@using GridMvc.Html
+
+	@Html.Grid((List<TT_MVC.Models.Model_Ticket_Attente>)ViewBag.Ticket).SetLanguage("fr").EmptyText("Aucun ticket").Columns(columns =>
+{
+	columns.Add(p => p.DateDebut).Titled("Date du Ticket").Format("{0:dd/MM/yyyy}");
+	columns.Add(p => p.Nom);
+	columns.Add(p => p.Prenom).Titled("Prénom");
+	columns.Add(p => p.Sujet).Encoded(false).Sanitized(false);
+	columns.Add(p => p.Suivie).Encoded(false).Sanitized(false);
+	columns.Add(p => p.Commentaire).Encoded(false).Sanitized(false);
+	columns.Add(p => p.DateFinTicket).Titled("Date de fin").Format("{0:dd/MM/yyyy}");
+})
+</div>
