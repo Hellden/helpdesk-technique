@@ -9,10 +9,10 @@ IIS installation
 If you have not installed IIS yet, I let you find a tutorial on an internet. Remember to add ASP.NET if the declaration in IIS is not done correctly.
 Installing SQL Server and Configuration
 
-Download the compatible version for your Windows without GUI, for Windows Server 2008 R2 use the SQL Server 2014 version.
-Once installed, open a CMD console and type the following command: sqlcmd -S. \ SQLEXPRESS.
-You must create the user that is used in the application pool that is linked to your website. By default it is DefaultAppPool (if in doubt check in your IIS Binding Pool application). Create login [IIS APPPOOL \ DefaultAppPool] FROM WINDOWS press enter then GO key and enter again.
-Given the necessary rights on the SQL Server to the user creates: sp_addsrvrolemember '<Login>', 'sysadmin' call on entry then GO and again on entry.
+- Download the compatible version for your Windows without GUI, for Windows Server 2008 R2 use the SQL Server 2014 version.
+- Once installed, open a CMD console and type the following command: sqlcmd -S. \ SQLEXPRESS.
+- You must create the user that is used in the application pool that is linked to your website. By default it is DefaultAppPool (if in doubt check in your IIS Binding Pool application). Create login [IIS APPPOOL \ DefaultAppPool] FROM WINDOWS press enter then GO key and enter again.
+- Given the necessary rights on the SQL Server to the user creates: sp_addsrvrolemember '<Login>', 'sysadmin' call on entry then GO and again on entry.
 WebDeploy Package Import-Import the newly created WebDeploy package via Visual Studio. For local connection strings, set: data source =. \ SQLEXPRESS; Integrated Security = SSPI; AttachDBFilename = | DataDirectory | aspnetdb.mdf; User Instance = true
 
 This is normally if everything went well, your site will have to work normally.
